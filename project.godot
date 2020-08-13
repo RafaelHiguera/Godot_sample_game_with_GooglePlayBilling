@@ -18,12 +18,12 @@ _global_script_class_icons={
 config/name="Pong with C#"
 config/description="A simple Pong game. This demo shows best practices
 for game development in Godot, including signals."
-run/main_scene="pong.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://pong.tscn"
+config/icon="res://Images/icon.png"
 
 [display]
 
-window/size/width=640
+window/size/width=800
 window/size/height=400
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
@@ -67,5 +67,4 @@ right_move_up={
 
 [rendering]
 
-quality/driver/driver_name="GLES2"
 viewport/default_clear_color=Color( 0, 0, 0, 1 )
