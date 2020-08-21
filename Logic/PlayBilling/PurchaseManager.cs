@@ -35,8 +35,6 @@ public class PurchaseManager : Node
 			_payment.Connect(nameof(GooglePlayBilling.PurchaseConsumed), this, nameof(OnPurchaseConsumed));           
 
 			_payment.StartConnection();
-			OnConnected();
-			_payment.QuerySkuDetails(new string[] { COINS_20_ID }, PurchaseType.InApp); // Use "subs" for subscriptions.
 		} 
 		else
 		{
@@ -59,6 +57,8 @@ public class PurchaseManager : Node
 	private void OnConnected()
 	{
 		GD.Print("PurchaseManager connected");
+	
+		_payment.QuerySkuDetails(new string[] { COINS_20_ID }, PurchaseType.InApp); // Use "subs" for subscriptions.
 
 		// We must acknowledge all puchases.
 		// See https://developer.android.com/google/play/billing/integrate#process for more information
