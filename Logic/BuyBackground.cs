@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-
-
+// Todo : use the save data to remember that the background color was bougth 
 public class BuyBackground : TextureButton
 {
 	public void _on_BuyRed_pressed()
@@ -11,6 +10,5 @@ public class BuyBackground : TextureButton
 		Node button = GetParent().GetNode<TextureButton>("BuyRed");
 		button.QueueFree();
 		GetParent().GetNode<RichTextLabel>("CoinsCounter").SetText(CoinsManager.numberOfCoins.ToString());
-			
 	}
 }

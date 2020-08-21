@@ -3,7 +3,7 @@ using System;
 
 static class CoinsManager
 {
-	public static int numberOfCoins = 20;
+	public static int numberOfCoins = 0;
 	private static int BACKGROUND_PRICE_IN_COINS = 20;
 	
 	public static bool buyBackgroundWithCoins(Color color){

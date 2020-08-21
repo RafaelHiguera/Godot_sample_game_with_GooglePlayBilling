@@ -50,13 +50,12 @@ namespace GodotGooglePlayBilling
 		{
 			try
 			{
-				Status = (int)billingResult["status"];
 				ResponseCode = (billingResult.Contains("response_code") ? (BillingResponseCode?)billingResult["response_code"] : null);
 				DebugMessage = (billingResult.Contains("debug_message") ? (string)billingResult["debug_message"] : null);
 			}
 			catch (System.Exception ex)
 			{
-				GD.Print("BillingResult: ", ex.ToString());
+				GD.Print("BillingResult 1: ", ex.ToString());
 			}
 		}
 

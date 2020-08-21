@@ -25,13 +25,15 @@ namespace GodotGooglePlayBilling
 
 		[Export] public bool AutoReconnect { get; set; }
 		[Export] public bool AutoConnect { get; set; }
-
+		
+		public bool IsAvailable { get; private set; }
 		private Object _payment;
 		
 		public GooglePlayBilling(){
 			if (Engine.HasSingleton("GodotGooglePlayBilling"))
 			{
 				GD.Print("GodotGooglePlayBilling HasSingleton");
+				IsAvailable = true;
 				_payment = Engine.GetSingleton("GodotGooglePlayBilling");
 				// These are all signals supported by the API
 				// You can drop some of these based on your needs
@@ -45,30 +47,37 @@ namespace GodotGooglePlayBilling
 				_payment.Connect("purchase_acknowledged", this, nameof(OnGodotGooglePlayBilling_purchase_acknowledged)); // Purchase token (string)
 				_payment.Connect("purchase_acknowledgement_error", this, nameof(OnGodotGooglePlayBilling_purchase_acknowledgement_error)); // Response ID (int), Debug message (string), Purchase token (string)
 				_payment.Connect("purchase_consumed", this, nameof(OnGodotGooglePlayBilling_purchase_consumed)); // Purchase token (string)
-				_payment.Connect("purchase_consumption_error", this, nameof(OnGodotGooglePlayBilling_purchase_consumption_error)); // Response ID (int), Debug message (string), Purchase token (string)
 
-				if (AutoConnect) StartConnection();
+
+				StartConnection();
+			} 
+			else
+			{
+				IsAvailable = false;
 			}
 			
 		}
-
-
+		
 		#region GooglePlayBilling Methods
 
 		public void StartConnection() => _payment?.Call("startConnection");
 
 		public void EndConnection() => _payment?.Call("endConnection");
 
-		public BillingResult Purchase(string sku)
-		{
-			if (_payment == null) return null;
-			var result = (Dictionary)_payment.Call("purchase", sku);
-			return new BillingResult(result);
-		}
-
 		public void QuerySkuDetails(string[] querySkuDetails, PurchaseType type) => _payment?.Call("querySkuDetails", querySkuDetails, $"{type}".ToLower());
 
 		public bool IsReady() => (_payment?.Call("isReady") as bool?) ?? false;
+
+		public void AcknowledgePurchase(string purchaseToken) => _payment?.Call("acknowledgePurchase", purchaseToken);
+
+		public void ConsumePurchase(string purchaseToken) => _payment?.Call("consumePurchase", purchaseToken);
+
+		public BillingResult Purchase(string sku)
+		{
+			if (_payment == null) return null;
+			_payment.Call("purchase", sku);
+			return new BillingResult();
+		}
 
 		public PurchasesResult QueryPurchases(PurchaseType purchaseType)
 		{
@@ -77,85 +86,29 @@ namespace GodotGooglePlayBilling
 			return new PurchasesResult(result);
 		}
 
-		public void AcknowledgePurchase(string purchaseToken) => _payment?.Call("acknowledgePurchase", purchaseToken);
-
-		public void ConsumePurchase(string purchaseToken) => _payment?.Call("consumePurchase", purchaseToken);
-
 		#endregion
 
 		#region GodotGooglePlayBilling Signals
 
-		private void OnGodotGooglePlayBilling_connected()
-		{
-			GD.Print("GodotGooglePlayBilling Connected");
-			EmitSignal(nameof(Connected));
-		}
+		private void OnGodotGooglePlayBilling_connected() => EmitSignal(nameof(Connected));
 
-		private async void OnGodotGooglePlayBilling_disconnected()
-		{
-			GD.Print("GodotGooglePlayBilling Disconnected");
-			EmitSignal(nameof(Disconnected));
+		private void OnGodotGooglePlayBilling_disconnected() => EmitSignal(nameof(Disconnected));
 
-			if (AutoReconnect)
-			{
-				await ToSignal(GetTree().CreateTimer(10), "timeout");
-				StartConnection();
-			}
-		}
+		private void OnGodotGooglePlayBilling_connect_error(int code, string message) => EmitSignal(nameof(ConnectError), code, message);
 
-		private void OnGodotGooglePlayBilling_connect_error(int code, string message)
-		{
-			GD.Print($"GodotGooglePlayBilling ConnectError {code}: {message}");
-			EmitSignal(nameof(ConnectError), code, message);
-		}
+		private void OnGodotGooglePlayBilling_sku_details_query_completed(Array skuDetails) => EmitSignal(nameof(SkuDetailsQueryCompleted), skuDetails);
 
-		private void OnGodotGooglePlayBilling_sku_details_query_completed(Array skuDetails)
-		{
-			GD.Print($"GodotGooglePlayBilling SkuDetailsQueryCompleted {skuDetails}");
-			EmitSignal(nameof(SkuDetailsQueryCompleted), skuDetails);
-		}
+		private void OnGodotGooglePlayBilling_sku_details_query_error(int code, string message) => EmitSignal(nameof(SkuDetailsQueryError), code, message);
 
-		private void OnGodotGooglePlayBilling_sku_details_query_error(int code, string message)
-		{
-			GD.Print($"SkuDetailsQueryError error {code}: {message}");
-			EmitSignal(nameof(SkuDetailsQueryError), code, message);
-		}
+		private void OnGodotGooglePlayBilling_purchases_updated(Array purchases) => EmitSignal(nameof(PurchasesUpdated), purchases);
 
-		private void OnGodotGooglePlayBilling_purchases_updated(Array purchases)
-		{
-			GD.Print($"GodotGooglePlayBilling PurchasesUpdated {purchases}");
-			EmitSignal(nameof(PurchasesUpdated), purchases);
-		}
+		private void OnGodotGooglePlayBilling_purchase_error(int code, string message) => EmitSignal(nameof(PurchaseError), code, message);
 
-		private void OnGodotGooglePlayBilling_purchase_error(int code, string message)
-		{
-			GD.Print($"GodotGooglePlayBilling PurchaseError {code}: {message}");
-			EmitSignal(nameof(PurchaseError), code, message);
-		}
+		private void OnGodotGooglePlayBilling_purchase_acknowledged(string purchaseToken) => EmitSignal(nameof(PurchaseAcknowledged), purchaseToken);
 
-		private void OnGodotGooglePlayBilling_purchase_acknowledged(string purchaseToken)
-		{
-			GD.Print($"GodotGooglePlayBilling PurchaseAcknowledged {purchaseToken}");
-			EmitSignal(nameof(PurchaseAcknowledged), purchaseToken);
-		}
+		private void OnGodotGooglePlayBilling_purchase_acknowledgement_error(int code, string message) => EmitSignal(nameof(PurchaseAcknowledgementError), code, message);
 
-		private void OnGodotGooglePlayBilling_purchase_acknowledgement_error(int code, string message)
-		{
-			GD.Print($"GodotGooglePlayBilling PurchaseAcknowledgementError error {code}: {message}");
-			EmitSignal(nameof(PurchaseAcknowledgementError), code, message);
-		}
-
-		private void OnGodotGooglePlayBilling_purchase_consumed(string purchaseToken)
-		{
-			GD.Print($"GodotGooglePlayBilling PurchaseConsumed successfully: {purchaseToken}");
-			EmitSignal(nameof(PurchaseConsumed), purchaseToken);
-		}
-
-		private void OnGodotGooglePlayBilling_purchase_consumption_error(int code, string message, string purchaseToken)
-		{
-			GD.Print($"GodotGooglePlayBilling PurchaseConsumption_error error {code}: {message}, purchase token: {purchaseToken}");
-			EmitSignal(nameof(PurchaseConsumption_error), code, message, purchaseToken);
-		}
+		private void OnGodotGooglePlayBilling_purchase_consumed(string purchaseToken) => EmitSignal(nameof(PurchaseConsumed), purchaseToken);
 
 		#endregion
 	}

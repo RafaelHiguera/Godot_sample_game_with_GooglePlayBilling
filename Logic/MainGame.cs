@@ -3,8 +3,8 @@ using System;
 
 public class MainGame : Node2D
 {
-	
 	public static Color backgroundColor = new Color("#2b8341");
+	private static bool gameStartUp = false;
 	
 	public override void _Ready()
 	{

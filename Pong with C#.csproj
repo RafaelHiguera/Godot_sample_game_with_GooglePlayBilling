@@ -56,9 +56,10 @@
     <Compile Include="Logic\BuyBackground.cs" />
     <Compile Include="Logic\CoinsManager.cs" />
     <Compile Include="Images\Coins.cs" />
+    <Compile Include="Logic\GameDataManager.cs" />
     <Compile Include="Logic\MainGame.cs" />
     <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\BillingResult.cs" />
-    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\GodotGooglePlayBilling.cs" />
+    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\GooglePlayBilling.cs" />
     <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\GooglePlayBillingUtils.cs" />
     <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\Purchase.cs" />
     <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\PurchasesResult.cs" />
