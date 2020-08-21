@@ -1,24 +1,6 @@
-# Pong with C#
+# Godot sample game with GooglePlayBilling in C#
+This game demonstrate how to use the Google Play Billing api to implement in-app purchases. Still in progress.
 
-A simple Pong game. This demo shows best practices
-for game development in Godot, including
-[signals](https://docs.godotengine.org/en/latest/getting_started/step_by_step/signals.html).
+It use this sample app as a base slightly modified to a single player game and have a new window for the store portion : https://github.com/godotengine/godot-demo-projects/tree/master/mono/pong
 
-Language: [C#](https://docs.godotengine.org/en/latest/getting_started/scripting/c_sharp/index.html)
-
-Renderer: GLES 2
-
-Note: There is a GDScript version available [here](https://github.com/godotengine/godot-demo-projects/tree/master/2d/pong).
-
-Note: There is a VisualScript version available [here](https://github.com/godotengine/godot-demo-projects/tree/master/visual_script/pong).
-
-## How does it work?
-
-The walls, paddle, and ball are all
-[`Area2D`](https://docs.godotengine.org/en/latest/classes/class_area2d.html)
-nodes. When the ball touches the walls or the paddles,
-they emit signals and modify the ball.
-
-## Screenshots
-
-![Screenshot](../../2d/pong/screenshots/pong.png)
+And for the Google Play Billing implementation, it use this sample as references, slightly modified : https://github.com/godotengine/godot-demo-projects/tree/master/mono/android_iap
