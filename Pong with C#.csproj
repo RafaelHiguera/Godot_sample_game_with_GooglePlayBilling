@@ -53,6 +53,19 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logic\BuyBackground.cs" />
+    <Compile Include="Logic\CoinsManager.cs" />
+    <Compile Include="Images\Coins.cs" />
+    <Compile Include="Logic\GameDataManager.cs" />
+    <Compile Include="Logic\MainGame.cs" />
+    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\BillingResult.cs" />
+    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\GooglePlayBilling.cs" />
+    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\GooglePlayBillingUtils.cs" />
+    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\Purchase.cs" />
+    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\PurchasesResult.cs" />
+    <Compile Include="Logic\PlayBilling\GodotGooglePlayBilling\SkuDetails.cs" />
+    <Compile Include="Logic\PlayBilling\PurchaseManager.cs" />
+    <Compile Include="Logic\Store.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logic\Ball.cs" />
     <Compile Include="Logic\CeilingFloor.cs" />
