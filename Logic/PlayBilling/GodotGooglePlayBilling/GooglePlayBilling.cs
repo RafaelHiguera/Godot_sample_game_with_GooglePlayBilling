@@ -75,8 +75,8 @@ namespace GodotGooglePlayBilling
 		public BillingResult Purchase(string sku)
 		{
 			if (_payment == null) return null;
-			_payment.Call("purchase", sku);
-			return new BillingResult();
+			var result = (Dictionary)_payment.Call("purchase", sku);
+			return new BillingResult(result);
 		}
 
 		public PurchasesResult QueryPurchases(PurchaseType purchaseType)
